@@ -1,0 +1,29 @@
+# macOS settings file 
+.DS_Store
+
+# Contains all your dependencies
+node_modules
+
+# Replace as required with your build location
+dist/
+
+# Deal with environment files
+.env
+.env.*
+
+# Allow a .env template file which can be copied
+!.env.template
+
+# Coverage directory used by testing tools
+coverage
+
+# npm and yarn debug logs
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# next.js
+.next
+
+# eslint cache
+.eslintcache
