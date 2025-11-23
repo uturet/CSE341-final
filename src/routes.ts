@@ -2,7 +2,9 @@
 import express from 'express';
 
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from '../swagger-output.json' assert { type: "json" };
+// Load swagger JSON dynamically (top-level await, Node 22+)
+let swaggerDocument: any;
+swaggerDocument = (await import('../swagger-output.json', { assert: { type: 'json' } })).default;
 
 import * as userController from './controllers/userController.js';
 import * as projectController from './controllers/projectController.js';
