@@ -1,10 +1,13 @@
 // routes.ts
 import express from 'express';
-
 import swaggerUi from 'swagger-ui-express';
-// Load swagger JSON dynamically (top-level await, Node 22+)
-let swaggerDocument: any;
-swaggerDocument = (await import('../swagger-output.json', { assert: { type: 'json' } })).default;
+import fs from 'fs';
+import path from 'path';
+
+// Load swagger JSON dynamically
+const swaggerFilePath = path.join(process.cwd(), 'src', 'swagger-output.json');
+const swaggerDocument = JSON.parse(fs.readFileSync(swaggerFilePath, 'utf-8'));
+
 
 import * as userController from './controllers/userController.js';
 import * as projectController from './controllers/projectController.js';
