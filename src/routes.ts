@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Load swagger JSON dynamically
-const swaggerFilePath = path.join(process.cwd(), 'src', 'swagger-output.json');
+const swaggerFilePath = path.join(process.cwd(), 'swagger-output.json');
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerFilePath, 'utf-8'));
 
 
