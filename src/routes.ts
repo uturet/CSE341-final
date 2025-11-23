@@ -1,7 +1,8 @@
+// routes.ts
 import express from 'express';
 
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from '../swagger-output.json';
+import swaggerDocument from '../swagger-output.json' assert { type: "json" };
 
 import * as userController from './controllers/userController.js';
 import * as projectController from './controllers/projectController.js';
