@@ -21,7 +21,7 @@ coverage
 pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
+*lock.json
 # next.js
 .next
 
