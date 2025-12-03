@@ -1,4 +1,4 @@
-import app from "./app";
+import app from "./app.js";
 import connectDB from "./db/connection";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
