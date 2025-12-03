@@ -2,13 +2,35 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Chat with Youtube Videos",
-    "description": "API for chatting with youtube videos",
+    "description": "API for chatting with YouTube videos",
     "version": "1.0.0"
   },
   "servers": [
     {
       "url": "http://localhost:3000",
       "description": "Local server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Operations about users"
+    },
+    {
+      "name": "Projects",
+      "description": "Operations about projects"
+    },
+    {
+      "name": "Chats",
+      "description": "Operations about chats"
+    },
+    {
+      "name": "Videos",
+      "description": "Operations about videos"
+    },
+    {
+      "name": "Channels",
+      "description": "Operations about channels"
     }
   ],
   "paths": {
@@ -65,7 +87,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": {
+                  "title": {
                     "example": "any"
                   }
                 }
@@ -129,7 +151,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": {
+                  "title": {
                     "example": "any"
                   }
                 }
@@ -214,7 +236,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "project_id": {
+                  "projectId": {
                     "example": "any"
                   },
                   "title": {
@@ -346,10 +368,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "project_id": {
+                  "projectId": {
                     "example": "any"
                   },
-                  "yt_id": {
+                  "ytVideoId": {
                     "example": "any"
                   }
                 }
@@ -413,7 +435,7 @@
                   "name": {
                     "example": "any"
                   },
-                  "ytid": {
+                  "ytChannelId": {
                     "example": "any"
                   }
                 }

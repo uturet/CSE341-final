@@ -1,5 +1,6 @@
+// src/controllers/channelController.ts
 import type { Request, Response, NextFunction } from 'express';
-import type { Channel } from '../models/channel';
+import type { IChannel as Channel } from '../models/channel';
 
 
 /**
@@ -43,9 +44,9 @@ export async function getChannelById(req: Request, res: Response, next: NextFunc
  */
 export async function createChannel(req: Request, res: Response, next: NextFunction) {
   try {
-    const { name, ytid } = req.body as Partial<Channel>;
+    const { name, ytChannelId } = req.body as Partial<Channel>;
 
-    if (!ytid || typeof ytid !== 'string' || ytid.trim() === '') {
+    if (!ytChannelId || typeof ytChannelId !== 'string' || ytChannelId.trim() === '') {
       return res.status(400).json({ message: 'Channel name is required and must be a non-empty string' });
     }
 
@@ -64,7 +65,7 @@ export async function createChannel(req: Request, res: Response, next: NextFunct
 export async function updateChannelById(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const { name, ytid } = req.body as Partial<Channel>;
+    const { name, ytChannelId } = req.body as Partial<Channel>;
 
     if (!id) {
       return res.status(400).json({ message: 'Channel id is required' });
