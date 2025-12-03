@@ -1,5 +1,6 @@
+// src/controllers/chatController.ts
 import type { Request, Response, NextFunction } from 'express';
-import type { Chat } from '../models/chat'
+import type { IChat as Chat } from "../models/chat";
 
 
 /**
@@ -43,10 +44,10 @@ export async function getChatById(req: Request, res: Response, next: NextFunctio
  */
 export async function createChat(req: Request, res: Response, next: NextFunction) {
   try {
-    const { project_id, title, messages } = req.body as Partial<Chat>;
+    const { projectId, title, messages } = req.body as Partial<Chat>;
 
-    if (!project_id) {
-      return res.status(400).json({ message: 'Chat project_id is required and must be a non-empty string' });
+    if (!projectId) {
+      return res.status(400).json({ message: 'Chat projectId is required and must be a non-empty string' });
     }
 
     const created = null

@@ -1,5 +1,6 @@
+// src/controllers/userController.ts
 import type { Request, Response, NextFunction } from 'express';
-import type { User } from '../models/user'
+import type { IUser as User } from '../models/user'
 
 
 /**

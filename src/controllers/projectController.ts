@@ -1,5 +1,6 @@
+// src/controllers/projectController.ts
 import type { Request, Response, NextFunction } from 'express';
-import type { Project } from '../models/project'
+import type { IProject as Project } from '../models/project'
 
 
 /**
@@ -66,10 +67,10 @@ export async function getProjectById(req: Request, res: Response, next: NextFunc
  */
 export async function createProject(req: Request, res: Response, next: NextFunction) {
   try {
-    const { name } = req.body as Partial<Project>;
+    const { title } = req.body as Partial<Project>;
 
-    if (!name || typeof name !== 'string' || name.trim() === '') {
-      return res.status(400).json({ message: 'Project name is required and must be a non-empty string' });
+    if (!title || typeof title !== 'string' || title.trim() === '') {
+      return res.status(400).json({ message: 'Project title is required and must be a non-empty string' });
     }
 
     const created = null
@@ -87,7 +88,7 @@ export async function createProject(req: Request, res: Response, next: NextFunct
 export async function updateProjectById(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const { name } = req.body as Partial<Project>;
+    const { title } = req.body as Partial<Project>;
 
     if (!id) {
       return res.status(400).json({ message: 'Project id is required' });
