@@ -8,6 +8,11 @@ import type { IChat as Chat } from "../models/chat";
  * Return list of chats
  */
 export async function getChats(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Chats']
+    #swagger.summary = 'List chats'
+  */
+
   try {
     res.json([]);
   } catch (err) {
@@ -20,6 +25,11 @@ export async function getChats(req: Request, res: Response, next: NextFunction) 
  * Return single chat by id
  */
 export async function getChatById(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Chats']
+    #swagger.summary = 'Get chat by id'
+  */
+
   try {
     const { id } = req.params;
     if (!id) {
@@ -43,6 +53,11 @@ export async function getChatById(req: Request, res: Response, next: NextFunctio
  * Create a new chat
  */
 export async function createChat(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Chats']
+    #swagger.summary = 'Create a new chat'
+  */
+
   try {
     const { projectId, title, messages } = req.body as Partial<Chat>;
 
@@ -63,6 +78,11 @@ export async function createChat(req: Request, res: Response, next: NextFunction
  * Update chat by id
  */
 export async function updateChatById(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Chats']
+    #swagger.summary = 'Update chat by id'
+  */
+
   try {
     const { id } = req.params;
     const { title, messages } = req.body as Partial<Chat>;
@@ -87,6 +107,11 @@ export async function updateChatById(req: Request, res: Response, next: NextFunc
  * Delete a chat by id
  */
 export async function deleteChatById(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Chats']
+    #swagger.summary = 'Delete chat by id'
+  */
+
   try {
     const { id } = req.params;
     if (!id) {

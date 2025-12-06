@@ -8,6 +8,11 @@ import type { IVideo as Video } from '../models/video'
  * Return list of videos
  */
 export async function getVideos(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Videos']
+    #swagger.summary = 'List videos'
+  */
+
   try {
     res.json([]);
   } catch (err) {
@@ -20,6 +25,11 @@ export async function getVideos(req: Request, res: Response, next: NextFunction)
  * Return single video by id
  */
 export async function getVideoById(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Videos']
+    #swagger.summary = 'Create new video'
+  */
+
   try {
     const { id } = req.params;
     if (!id) {
@@ -43,6 +53,11 @@ export async function getVideoById(req: Request, res: Response, next: NextFuncti
  * Create a new video
  */
 export async function createVideo(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Videos']
+    #swagger.summary = 'Create a new video'
+  */
+
   try {
     const { projectId, ytVideoId } = req.body as Partial<Video>;
 
@@ -67,6 +82,11 @@ export async function createVideo(req: Request, res: Response, next: NextFunctio
  * Update video by id
  */
 export async function updateVideoById(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Videos']
+    #swagger.summary = 'Update video by id'
+  */
+
   try {
     const { id } = req.params;
     const { title, ytChannelId, description, captions, length, views } = req.body as Partial<Video>;
@@ -91,6 +111,11 @@ export async function updateVideoById(req: Request, res: Response, next: NextFun
  * Delete a video by id
  */
 export async function deleteVideoById(req: Request, res: Response, next: NextFunction) {
+  /* 
+    #swagger.tags = ['Videos']
+    #swagger.summary = 'Delete video by id'
+  */
+
   try {
     const { id } = req.params;
     if (!id) {
