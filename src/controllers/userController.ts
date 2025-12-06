@@ -8,12 +8,17 @@ import type { IUser as User } from '../models/user'
  * Update user
  */
 export async function updateUser(req: Request, res: Response, next: NextFunction) {
-    try {
+  /* 
+    #swagger.tags = ['Users']
+    #swagger.summary = 'Update current user'
+  */
 
-        return res.json({});
-    } catch (err) {
-        next(err);
-    }
+  try {
+
+    return res.json({});
+  } catch (err) {
+    next(err);
+  }
 }
 
 /**
@@ -21,10 +26,15 @@ export async function updateUser(req: Request, res: Response, next: NextFunction
  * Delete a user
  */
 export async function deleteUser(req: Request, res: Response, next: NextFunction) {
-    try {
+  /* 
+    #swagger.tags = ['Users']
+    #swagger.summary = 'Delete current user'
+  */
 
-        return res.status(204).send();
-    } catch (err) {
-        next(err);
-    }
+  try {
+
+    return res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
 }

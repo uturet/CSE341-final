@@ -20,10 +20,7 @@ const VideoSchema = new Schema<IVideo>(
       required: true,
     },
     title: { type: String },
-    ytChannelId: { 
-      type: String,
-      required: true,
-    },
+    ytChannelId: { type: String },
     ytVideoId: {
       type: String,
       required: true,
