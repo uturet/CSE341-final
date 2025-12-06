@@ -77,7 +77,6 @@ export async function createChannel(req: Request, res: Response, next: NextFunct
       projectId?: string;
     }>;
 
-    // validate required fields
     if (
       !ytChannelId ||
       typeof ytChannelId !== "string" ||
@@ -144,7 +143,6 @@ export async function updateChannelById(req: Request, res: Response, next: NextF
       if (!mongoose.isValidObjectId(projectId)) {
         return res.status(400).json({ message: "projectId is not a valid ObjectId" });
       }
-      // @ts-ignore - assign ObjectId
       update.projectId = new mongoose.Types.ObjectId(projectId);
     }
 
