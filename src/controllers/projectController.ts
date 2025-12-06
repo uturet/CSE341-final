@@ -45,7 +45,6 @@ export async function getProjects(req: Request, res: Response, next: NextFunctio
   /* 
     #swagger.tags = ['Projects']
     #swagger.summary = 'List projects'
-    #swagger.description = 'Return a list of projects; supports optional userId filter, limit, skip'
   */
 
   try {
@@ -199,7 +198,6 @@ export async function deleteProjectById(req: Request, res: Response, next: NextF
   /* 
     #swagger.tags = ['Projects']
     #swagger.summary = 'Delete project by id'
-    #swagger.parameters['id'] = { description: 'Project id', in: 'path', required: true, type: 'string' }
   */
 
   try {
