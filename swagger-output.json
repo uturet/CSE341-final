@@ -46,6 +46,10 @@
     },
     "/user": {
       "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update current user",
         "description": "",
         "responses": {
           "200": {
@@ -54,6 +58,10 @@
         }
       },
       "delete": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete current user",
         "description": "",
         "responses": {
           "204": {
@@ -64,14 +72,48 @@
     },
     "/project": {
       "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "List projects",
         "description": "",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
       "post": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Create a project",
         "description": "",
         "responses": {
           "201": {
@@ -87,7 +129,13 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "userId": {
+                    "example": "any"
+                  },
                   "title": {
+                    "example": "any"
+                  },
+                  "description": {
                     "example": "any"
                   }
                 }
@@ -99,6 +147,10 @@
     },
     "/project/{id}": {
       "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get project by id",
         "description": "",
         "parameters": [
           {
@@ -123,6 +175,10 @@
         }
       },
       "put": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Update project by id",
         "description": "",
         "parameters": [
           {
@@ -153,6 +209,9 @@
                 "properties": {
                   "title": {
                     "example": "any"
+                  },
+                  "description": {
+                    "example": "any"
                   }
                 }
               }
@@ -161,6 +220,10 @@
         }
       },
       "delete": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Delete project by id",
         "description": "",
         "parameters": [
           {
@@ -187,6 +250,10 @@
     },
     "/project/{id}/status": {
       "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get current captions/extractions status for project",
         "description": "",
         "parameters": [
           {
@@ -213,14 +280,48 @@
     },
     "/chat": {
       "get": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "List chats",
         "description": "",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
       "post": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "Create a new chat",
         "description": "",
         "responses": {
           "201": {
@@ -254,6 +355,10 @@
     },
     "/chat/{id}": {
       "get": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "Get chat by id",
         "description": "",
         "parameters": [
           {
@@ -278,6 +383,10 @@
         }
       },
       "put": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "Update chat by id",
         "description": "",
         "parameters": [
           {
@@ -319,6 +428,10 @@
         }
       },
       "delete": {
+        "tags": [
+          "Chats"
+        ],
+        "summary": "Delete chat by id",
         "description": "",
         "parameters": [
           {
@@ -345,14 +458,48 @@
     },
     "/video": {
       "get": {
+        "tags": [
+          "Videos"
+        ],
+        "summary": "List videos",
         "description": "",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
       "post": {
+        "tags": [
+          "Videos"
+        ],
+        "summary": "Create a new video",
         "description": "",
         "responses": {
           "201": {
@@ -383,6 +530,10 @@
     },
     "/video/{id}": {
       "delete": {
+        "tags": [
+          "Videos"
+        ],
+        "summary": "Delete video by id",
         "description": "",
         "parameters": [
           {
@@ -409,6 +560,10 @@
     },
     "/channel": {
       "get": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Return list of channels",
         "description": "",
         "responses": {
           "200": {
@@ -417,6 +572,10 @@
         }
       },
       "post": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Create a new channel",
         "description": "",
         "responses": {
           "201": {
@@ -432,6 +591,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "projectId": {
+                    "example": "any"
+                  },
                   "name": {
                     "example": "any"
                   },
@@ -447,6 +609,10 @@
     },
     "/channel/{id}": {
       "delete": {
+        "tags": [
+          "Channels"
+        ],
+        "summary": "Delete a channel by id",
         "description": "",
         "parameters": [
           {
