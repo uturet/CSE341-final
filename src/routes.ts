@@ -3,11 +3,11 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
 import path from 'path';
+import jwtAuthMiddleware from "./middleware/jwtAuth.js";
 
 // Load swagger JSON dynamically
 const swaggerFilePath = path.join(process.cwd(), 'swagger-output.json');
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerFilePath, 'utf-8'));
-
 
 import * as userController from './controllers/userController.js';
 import * as projectController from './controllers/projectController.js';
@@ -20,28 +20,33 @@ const router = express.Router();
 router.use('/api-docs', swaggerUi.serve);
 router.get('/api-docs', swaggerUi.setup(swaggerDocument));
 
-router.put('/user', userController.updateUser);
-router.delete('/user', userController.deleteUser);
+// ------------------- USER -------------------
+router.put('/user', jwtAuthMiddleware, userController.updateUser);
+router.delete('/user', jwtAuthMiddleware, userController.deleteUser);
 
-router.get('/project', projectController.getProjects);
-router.get('/project/:id', projectController.getProjectById);
-router.post('/project', projectController.createProject);
-router.put('/project/:id', projectController.updateProjectById);
-router.delete('/project/:id', projectController.deleteProjectById);
-router.get('/project/:id/status', projectController.getStatus);
+// ------------------- PROJECT -------------------
+router.get('/project', jwtAuthMiddleware, projectController.getProjects);
+router.get('/project/:id', jwtAuthMiddleware, projectController.getProjectById);
+router.post('/project', jwtAuthMiddleware, projectController.createProject);
+router.put('/project/:id', jwtAuthMiddleware, projectController.updateProjectById);
+router.delete('/project/:id', jwtAuthMiddleware, projectController.deleteProjectById);
+router.get('/project/:id/status', jwtAuthMiddleware, projectController.getStatus);
 
-router.get('/chat', chatController.getChats);
-router.get('/chat/:id', chatController.getChatById);
-router.post('/chat', chatController.createChat);
-router.put('/chat/:id', chatController.updateChatById);
-router.delete('/chat/:id', chatController.deleteChatById);
+// ------------------- CHAT -------------------
+router.get('/chat', jwtAuthMiddleware, chatController.getChats);
+router.get('/chat/:id', jwtAuthMiddleware, chatController.getChatById);
+router.post('/chat', jwtAuthMiddleware, chatController.createChat);
+router.put('/chat/:id', jwtAuthMiddleware, chatController.updateChatById);
+router.delete('/chat/:id', jwtAuthMiddleware, chatController.deleteChatById);
 
-router.get('/video', videoController.getVideos);
-router.post('/video', videoController.createVideo);
-router.delete('/video/:id', videoController.deleteVideoById);
+// ------------------- VIDEO -------------------
+router.get('/video', jwtAuthMiddleware, videoController.getVideos);
+router.post('/video', jwtAuthMiddleware, videoController.createVideo);
+router.delete('/video/:id', jwtAuthMiddleware, videoController.deleteVideoById);
 
-router.get('/channel', channelController.getChannels);
-router.post('/channel', channelController.createChannel);
-router.delete('/channel/:id', channelController.deleteChannelById);
+// ------------------- CHANNEL -------------------
+router.get('/channel', jwtAuthMiddleware, channelController.getChannels);
+router.post('/channel', jwtAuthMiddleware, channelController.createChannel);
+router.delete('/channel/:id', jwtAuthMiddleware, channelController.deleteChannelById);
 
 export default router;
