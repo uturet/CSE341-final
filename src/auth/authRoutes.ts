@@ -1,4 +1,4 @@
-// src/auth/auth.routes.ts
+// src/auth/authRoutes.ts
 import { Router } from "express";
 import passport from "passport";
 import { googleCallback } from "./authController";

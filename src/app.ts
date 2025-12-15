@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import passport from './auth/passport.js'
 import { createHandler } from 'graphql-http/lib/use/express';
+import authRoutes from "./auth/authRoutes";
 import router from "./routes.js";
 import errorHandler from "./middleware/errorHandler.js";
 import schema from "./graphql/schema.js";
@@ -68,8 +69,11 @@ app.get('/', (_req, res) => {
 </html>`);
 });
 
-// REST Routes
-app.use("/api", router);
+// Authentication routes (public)
+app.use("/auth", authRoutes);
+
+// REST Routes (private)
+app.use("/", router);
 
 // Middleware
 app.use(errorHandler);

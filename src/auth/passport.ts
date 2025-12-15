@@ -1,7 +1,7 @@
 // src/auth/passport.ts
 import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { UserModel } from "../models/user";
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import type {Profile, VerifyCallback} from 'passport-google-oauth20'
 
 
