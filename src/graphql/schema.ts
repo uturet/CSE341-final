@@ -6,10 +6,23 @@ import { ProjectType } from "./types/projectType.js";
 import { ChatType } from "./types/chatType.js";
 import { VideoType } from "./types/videoType.js";
 import { ChannelType } from "./types/channelType.js";
+import { AuthPayloadType } from "./types/authType.js";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
   fields: {
+    // Auth Queries
+    verifyToken: {
+      type: AuthPayloadType,
+      args: resolvers.Query.verifyToken.args,
+      resolve: resolvers.Query.verifyToken.resolve,
+    },
+    me: {
+      type: AuthPayloadType,
+      args: resolvers.Query.me?.args || {},
+      resolve: resolvers.Query.me.resolve,
+    },
+
     // Users
     user: {
       type: UserType,

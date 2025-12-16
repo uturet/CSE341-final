@@ -1,7 +1,4 @@
 // src/app.ts
-import dotenv from "dotenv";
-dotenv.config();
-
 import express from "express";
 import cors from "cors";
 import passport from './auth/passport.js'
@@ -46,7 +43,28 @@ if (swaggerDocument) {
 app.use('/auth', authRoutes);
 
 // GraphQL endpoint
-app.all('/graphql', createHandler({ schema }));
+app.all('/graphql', (req, res) => {
+  createHandler({ 
+    schema,
+    context: async () => {
+      const authHeader = req.headers.authorization;
+      const context: any = {};
+      
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        try {
+          const token = authHeader.substring(7);
+          const jwt = await import('jsonwebtoken');
+          const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+          context.user = decoded;
+        } catch (error) {
+          // Invalid token, context.user remains undefined
+        }
+      }
+      
+      return context;
+    }
+  })(req, res);
+});
 
 // GraphiQL interface
 if (process.env.NODE_ENV !== "production")
