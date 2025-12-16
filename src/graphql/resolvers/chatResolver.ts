@@ -7,9 +7,9 @@ import {
   GraphQLList,
 } from "graphql";
 import mongoose from "mongoose";
-import { ChatModel } from "../../models/chat";
-import { ChatType } from "../types/chatType";
-import { CreateChatInputType, UpdateChatInputType } from "../inputs/chatInput";
+import { ChatModel } from "../../models/chat.js";
+import { ChatType } from "../types/chatType.js";
+import { CreateChatInputType, UpdateChatInputType } from "../inputs/chatInput.js";
 
 // Helper: validate MongoDB ObjectId
 function validateObjectId(id: string) {

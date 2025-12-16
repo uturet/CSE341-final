@@ -7,7 +7,7 @@ import {
   GraphQLList,
 } from "graphql";
 import { GraphQLDateTime } from "graphql-scalars";
-import { ProjectType } from "./projectType";
+import { ProjectType } from "./projectType.js";
 import { ProjectModel } from "../../models/project.js";
 
 export const UserType = new GraphQLObjectType({

@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from 'jsonwebtoken';
-import type { IUser as User } from "../models/user";
+import type { IUser as User } from "../models/user.js";
 
 const jwtAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
   try {

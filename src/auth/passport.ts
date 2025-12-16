@@ -1,6 +1,9 @@
 // src/auth/passport.ts
+import dotenv from "dotenv";
+dotenv.config();
+
 import passport from 'passport';
-import { UserModel } from "../models/user";
+import { UserModel } from "../models/user.js";
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import type {Profile, VerifyCallback} from 'passport-google-oauth20'
 

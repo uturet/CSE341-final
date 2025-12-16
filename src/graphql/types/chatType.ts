@@ -1,7 +1,7 @@
 // src/graphql/types/chatType.ts
 import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList, GraphQLEnumType } from "graphql";
 import { GraphQLDateTime } from "graphql-scalars";
-import { ProjectType } from "./projectType";
+import { ProjectType } from "./projectType.js";
 import { ProjectModel } from "../../models/project.js";
 
 // ENUM for message sender

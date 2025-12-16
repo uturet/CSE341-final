@@ -1,9 +1,9 @@
 // src/graphql/resolvers/index.ts
-import { userResolvers } from "./userResolver";
-import { projectResolvers } from "./projectResolver";
-import { chatResolvers } from "./chatResolver";
-import { videoResolvers } from "./videoResolver";
-import { channelResolvers } from "./channelResolver";
+import { userResolvers } from "./userResolver.js";
+import { projectResolvers } from "./projectResolver.js";
+import { chatResolvers } from "./chatResolver.js";
+import { videoResolvers } from "./videoResolver.js";
+import { channelResolvers } from "./channelResolver.js";
 
 const resolvers = {
   Query: {
