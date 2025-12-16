@@ -7,8 +7,25 @@ import cors from "cors";
 import passport from './auth/passport.js'
 import { createHandler } from 'graphql-http/lib/use/express';
 import schema from "./graphql/schema.js";
+import swaggerUi from 'swagger-ui-express';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import authRoutes from './auth/authRoutes.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
+
+// Load Swagger documentation
+let swaggerDocument;
+try {
+  const swaggerPath = join(__dirname, '..', 'swagger-output.json');
+  swaggerDocument = JSON.parse(readFileSync(swaggerPath, 'utf8'));
+} catch (error) {
+  console.warn('Swagger documentation not found. Run "pnpm swagger" to generate it.');
+}
 
 // Middleware
 app.use(cors());
@@ -17,6 +34,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(passport.initialize());
 
+// Swagger UI
+if (swaggerDocument) {
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+    customSiteTitle: 'Chat with YouTube Videos API',
+    customCss: '.swagger-ui .topbar { display: none }',
+  }));
+}
+
+// Auth routes
+app.use('/auth', authRoutes);
 
 // GraphQL endpoint
 app.all('/graphql', createHandler({ schema }));
