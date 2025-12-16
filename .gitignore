@@ -22,6 +22,7 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 *lock.json
+*lock.yaml
 # next.js
 .next
 
