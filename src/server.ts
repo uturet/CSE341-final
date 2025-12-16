@@ -11,6 +11,7 @@ const startServer = async () => {
     console.log(`Server is running on http://localhost:${PORT}`);
     console.log(`GraphQL API available at http://localhost:${PORT}/graphql`);
     console.log(`GraphiQL interface at http://localhost:${PORT}/graphiql`);
+    console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
   });
 };
 
