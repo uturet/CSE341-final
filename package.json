@@ -9,7 +9,10 @@
     "build": "tsc",
     "dev": "tsx watch --env-file=.env src/server.ts",
     "lint": "eslint . --ext .ts",
-    "swagger": "tsx ./swagger.ts"
+    "swagger": "tsx ./swagger.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -19,10 +22,14 @@
     "@eslint/js": "^9.39.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.25",
+    "@types/jest": "^30.0.0",
     "@types/swagger-ui-express": "^4.1.8",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
+    "graphql": "^16.12.0",
+    "jest": "^30.2.0",
     "jiti": "^2.6.1",
+    "ts-jest": "^29.4.6",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0"
@@ -31,12 +38,12 @@
     "@types/node": "^24.10.1",
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "graphql": "^16.9.0",
     "graphql-http": "^1.22.3",
     "graphql-scalars": "^1.23.0",
     "mongoose": "^9.0.0",
     "swagger": "^0.7.5",
     "swagger-autogen": "^2.23.7",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "ts-node": "^10.9.2"
   }
 }
