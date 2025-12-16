@@ -1,6 +1,6 @@
 // src/auth/auth.controller.ts
 import type { Request, Response, NextFunction } from "express";
-import { generateToken } from "./jwt";
+import { generateToken } from "./jwt.js";
 import type { IUser as User} from "../models/user.js";
 
 export const googleCallback = (req: Request, res: Response, next: NextFunction) => {
