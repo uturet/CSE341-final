@@ -132,6 +132,8 @@ mutation {
 Main GraphQL endpoint for all queries and mutations.
 
 ### Available Queries:
+- **verifyToken(token: String!)**: Verify if a JWT token is valid
+- **me**: Get the currently authenticated user (requires Authorization header)
 - **user(id: ID!)**: Get a single user by ID
 - **users(limit: Int, skip: Int)**: Get list of users
 - **project(id: ID!)**: Get a single project by ID
@@ -144,6 +146,8 @@ Main GraphQL endpoint for all queries and mutations.
 - **channels(projectId: ID, limit: Int, skip: Int)**: Get list of channels
 
 ### Available Mutations:
+- **googleAuth(input: GoogleAuthInput!)**: Authenticate with Google credentials and get JWT token
+- **refreshToken(token: String!)**: Refresh an existing JWT token
 - **createUser(input: CreateUserInput!)**: Create a new user
 - **updateUser(id: ID!, input: UpdateUserInput!)**: Update a user
 - **deleteUser(id: ID!)**: Delete a user
@@ -214,6 +218,84 @@ Main GraphQL endpoint for all queries and mutations.
 }`,
                     variables: {
                       id: '507f1f77bcf86cd799439011',
+                    },
+                  },
+                },
+                'Verify Token': {
+                  value: {
+                    query: `query VerifyToken($token: String!) {
+  verifyToken(token: $token) {
+    success
+    message
+    user {
+      id
+      email
+      name
+    }
+  }
+}`,
+                    variables: {
+                      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                    },
+                  },
+                },
+                'Get Current User': {
+                  value: {
+                    query: `query GetMe {
+  me {
+    success
+    message
+    user {
+      id
+      email
+      name
+      projects {
+        id
+        title
+      }
+    }
+  }
+}`,
+                  },
+                },
+                'Google Authentication': {
+                  value: {
+                    query: `mutation GoogleAuth($input: GoogleAuthInput!) {
+  googleAuth(input: $input) {
+    success
+    token
+    message
+    user {
+      id
+      email
+      name
+    }
+  }
+}`,
+                    variables: {
+                      input: {
+                        googleId: '1234567890',
+                        email: 'user@example.com',
+                        name: 'John Doe',
+                      },
+                    },
+                  },
+                },
+                'Refresh Token': {
+                  value: {
+                    query: `mutation RefreshToken($token: String!) {
+  refreshToken(token: $token) {
+    success
+    token
+    message
+    user {
+      id
+      email
+    }
+  }
+}`,
+                    variables: {
+                      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
                     },
                   },
                 },
