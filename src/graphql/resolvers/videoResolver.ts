@@ -7,8 +7,8 @@ import {
   GraphQLList,
 } from "graphql";
 import mongoose from "mongoose";
-import { VideoModel } from "../../models/video";
-import { VideoType } from "../types/videoType";
+import { VideoModel } from "../../models/video.js";
+import { VideoType } from "../types/videoType.js";
 import {
   CreateVideoInputType,
   UpdateVideoInputType,

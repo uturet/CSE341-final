@@ -1,40 +1,28 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Chat with Youtube Videos",
-    "description": "API for chatting with YouTube videos",
-    "version": "1.0.0"
+    "title": "Chat with Youtube Videos - GraphQL API",
+    "version": "1.0.0",
+    "description": "\nGraphQL API for chatting with YouTube videos. This API allows users to:\n- Manage projects containing YouTube videos\n- Store and retrieve video transcripts\n- Create AI-powered chat conversations about video content\n- Track YouTube channels\n\n## GraphQL Endpoint\nAll queries and mutations are sent to: `POST /graphql`\n\n## Authentication\nMost operations require a JWT token obtained via Google OAuth.\nInclude the token in the Authorization header: `Bearer <token>`\n\n## GraphiQL Interface\nInteractive GraphQL explorer available at: `/graphiql` (development only)\n\n## Example Query\n```graphql\nquery {\n  user(id: \"507f1f77bcf86cd799439011\") {\n    id\n    email\n    name\n    projects {\n      id\n      title\n      videos {\n        id\n        title\n        ytVideoId\n      }\n    }\n  }\n}\n```\n\n## Example Mutation\n```graphql\nmutation {\n  createProject(input: {\n    userId: \"507f1f77bcf86cd799439011\"\n    title: \"My Project\"\n    description: \"Project description\"\n  }) {\n    id\n    title\n    createdAt\n  }\n}\n```\n    "
   },
   "servers": [
     {
       "url": "http://localhost:3000",
-      "description": "Local server"
+      "description": "Local development server"
     }
   ],
   "tags": [
     {
-      "name": "Users",
-      "description": "Operations about users"
+      "name": "Authentication",
+      "description": "Google OAuth authentication endpoints"
     },
     {
-      "name": "Projects",
-      "description": "Operations about projects"
-    },
-    {
-      "name": "Chats",
-      "description": "Operations about chats"
-    },
-    {
-      "name": "Videos",
-      "description": "Operations about videos"
-    },
-    {
-      "name": "Channels",
-      "description": "Operations about channels"
+      "name": "GraphQL",
+      "description": "GraphQL API endpoint for all queries and mutations"
     }
   ],
   "paths": {
-    "/api-docs": {
+    "/graphiql": {
       "get": {
         "description": "",
         "responses": {
@@ -44,174 +32,134 @@
         }
       }
     },
-    "/user": {
-      "put": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Update current user",
+    "/auth/google": {
+      "get": {
         "description": "",
         "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Delete current user",
-        "description": "",
-        "responses": {
-          "204": {
-            "description": "No Content"
+          "default": {
+            "description": ""
           }
         }
       }
     },
-    "/project": {
+    "/auth/google/callback": {
       "get": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "List projects",
         "description": "",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "skip",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "userId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           }
         }
-      },
-      "post": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Create a project",
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token obtained from Google OAuth login"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
           },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "id": {
                 "type": "object",
                 "properties": {
-                  "userId": {
-                    "example": "any"
+                  "type": {
+                    "type": "string",
+                    "example": "string"
                   },
-                  "title": {
-                    "example": "any"
-                  },
-                  "description": {
-                    "example": "any"
+                  "example": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
                   }
                 }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/project/{id}": {
-      "get": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Get project by id",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Update project by id",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
+              },
+              "googleId": {
                 "type": "object",
                 "properties": {
-                  "title": {
-                    "example": "any"
+                  "type": {
+                    "type": "string",
+                    "example": "string"
                   },
-                  "description": {
-                    "example": "any"
+                  "example": {
+                    "type": "string",
+                    "example": "1234567890"
+                  }
+                }
+              },
+              "email": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "user@example.com"
+                  }
+                }
+              },
+              "name": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "John Doe"
+                  }
+                }
+              },
+              "projects": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "array"
+                  },
+                  "items": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              },
+              "createdAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
+                  }
+                }
+              },
+              "updatedAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
                   }
                 }
               }
@@ -219,207 +167,127 @@
           }
         }
       },
-      "delete": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Delete project by id",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
+      "Project": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
           },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/project/{id}/status": {
-      "get": {
-        "tags": [
-          "Projects"
-        ],
-        "summary": "Get current captions/extractions status for project",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/chat": {
-      "get": {
-        "tags": [
-          "Chats"
-        ],
-        "summary": "List chats",
-        "description": "",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "skip",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "projectId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Chats"
-        ],
-        "summary": "Create a new chat",
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "id": {
                 "type": "object",
                 "properties": {
-                  "projectId": {
-                    "example": "any"
+                  "type": {
+                    "type": "string",
+                    "example": "string"
                   },
-                  "title": {
-                    "example": "any"
-                  },
-                  "messages": {
-                    "example": "any"
+                  "example": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
                   }
                 }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/chat/{id}": {
-      "get": {
-        "tags": [
-          "Chats"
-        ],
-        "summary": "Get chat by id",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Chats"
-        ],
-        "summary": "Update chat by id",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
+              },
+              "userId": {
                 "type": "object",
                 "properties": {
-                  "title": {
-                    "example": "any"
+                  "type": {
+                    "type": "string",
+                    "example": "string"
                   },
-                  "messages": {
-                    "example": "any"
+                  "example": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                  }
+                }
+              },
+              "title": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "My YouTube Project"
+                  }
+                }
+              },
+              "description": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "A collection of videos"
+                  }
+                }
+              },
+              "channels": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "array"
+                  },
+                  "items": {
+                    "$ref": "#/components/schemas/Channel"
+                  }
+                }
+              },
+              "videos": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "array"
+                  },
+                  "items": {
+                    "$ref": "#/components/schemas/Video"
+                  }
+                }
+              },
+              "chats": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "array"
+                  },
+                  "items": {
+                    "$ref": "#/components/schemas/Chat"
+                  }
+                }
+              },
+              "createdAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
+                  }
+                }
+              },
+              "updatedAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
                   }
                 }
               }
@@ -427,212 +295,393 @@
           }
         }
       },
-      "delete": {
-        "tags": [
-          "Chats"
-        ],
-        "summary": "Delete chat by id",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
+      "Video": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
           },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/video": {
-      "get": {
-        "tags": [
-          "Videos"
-        ],
-        "summary": "List videos",
-        "description": "",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "skip",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "projectId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Videos"
-        ],
-        "summary": "Create a new video",
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "id": {
                 "type": "object",
                 "properties": {
-                  "projectId": {
-                    "example": "any"
+                  "type": {
+                    "type": "string",
+                    "example": "string"
                   },
-                  "ytVideoId": {
-                    "example": "any"
+                  "example": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                  }
+                }
+              },
+              "projectId": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                  }
+                }
+              },
+              "title": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "Video Title"
+                  }
+                }
+              },
+              "ytChannelId": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "UCxxxxxx"
+                  }
+                }
+              },
+              "ytVideoId": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "dQw4w9WgXcQ"
+                  }
+                }
+              },
+              "description": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "Video description"
+                  }
+                }
+              },
+              "captions": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "Full video transcript..."
+                  }
+                }
+              },
+              "length": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "integer"
+                  },
+                  "example": {
+                    "type": "number",
+                    "example": 360
+                  }
+                }
+              },
+              "views": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "integer"
+                  },
+                  "example": {
+                    "type": "number",
+                    "example": 1000000
+                  }
+                }
+              },
+              "createdAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
+                  }
+                }
+              },
+              "updatedAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
                   }
                 }
               }
             }
           }
         }
-      }
-    },
-    "/video/{id}": {
-      "delete": {
-        "tags": [
-          "Videos"
-        ],
-        "summary": "Delete video by id",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      }
-    },
-    "/channel": {
-      "get": {
-        "tags": [
-          "Channels"
-        ],
-        "summary": "Return list of channels",
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
       },
-      "post": {
-        "tags": [
-          "Channels"
-        ],
-        "summary": "Create a new channel",
-        "description": "",
-        "responses": {
-          "201": {
-            "description": "Created"
+      "Chat": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
           },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
+          "properties": {
+            "type": "object",
+            "properties": {
+              "id": {
                 "type": "object",
                 "properties": {
-                  "projectId": {
-                    "example": "any"
+                  "type": {
+                    "type": "string",
+                    "example": "string"
                   },
-                  "name": {
-                    "example": "any"
+                  "example": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                  }
+                }
+              },
+              "projectId": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
                   },
-                  "ytChannelId": {
-                    "example": "any"
+                  "example": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                  }
+                }
+              },
+              "title": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "Chat about video"
+                  }
+                }
+              },
+              "messages": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "array"
+                  },
+                  "items": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              },
+              "createdAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
+                  }
+                }
+              },
+              "updatedAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
                   }
                 }
               }
             }
           }
         }
-      }
-    },
-    "/channel/{id}": {
-      "delete": {
-        "tags": [
-          "Channels"
-        ],
-        "summary": "Delete a channel by id",
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
+          },
+          "properties": {
+            "type": "object",
+            "properties": {
+              "sender": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "enum": {
+                    "type": "array",
+                    "example": [
+                      "user",
+                      "ai"
+                    ],
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "user"
+                  }
+                }
+              },
+              "text": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "What is this video about?"
+                  }
+                }
+              }
             }
           }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
+        }
+      },
+      "Channel": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "object"
           },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
+          "properties": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                  }
+                }
+              },
+              "projectId": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "507f1f77bcf86cd799439011"
+                  }
+                }
+              },
+              "name": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "Channel Name"
+                  }
+                }
+              },
+              "ytChannelId": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "example": {
+                    "type": "string",
+                    "example": "UCxxxxxx"
+                  }
+                }
+              },
+              "createdAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
+                  }
+                }
+              },
+              "updatedAt": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "example": "date-time"
+                  }
+                }
+              }
+            }
           }
         }
       }

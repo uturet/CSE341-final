@@ -7,8 +7,8 @@ import {
   GraphQLInt,
 } from "graphql";
 import { GraphQLDateTime } from "graphql-scalars";
-import { ProjectType } from "./projectType";
-import { ProjectModel } from "../../models/project";
+import { ProjectType } from "./projectType.js";
+import { ProjectModel } from "../../models/project.js";
 
 export const VideoType = new GraphQLObjectType({
   name: "Video",

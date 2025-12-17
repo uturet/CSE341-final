@@ -1,12 +1,14 @@
 // src/graphql/resolvers/index.ts
-import { userResolvers } from "./userResolver";
-import { projectResolvers } from "./projectResolver";
-import { chatResolvers } from "./chatResolver";
-import { videoResolvers } from "./videoResolver";
-import { channelResolvers } from "./channelResolver";
+import { authResolvers } from "./authResolver.js";
+import { userResolvers } from "./userResolver.js";
+import { projectResolvers } from "./projectResolver.js";
+import { chatResolvers } from "./chatResolver.js";
+import { videoResolvers } from "./videoResolver.js";
+import { channelResolvers } from "./channelResolver.js";
 
 const resolvers = {
   Query: {
+    ...authResolvers.Query,
     ...userResolvers.Query,
     ...projectResolvers.Query,
     ...chatResolvers.Query,
@@ -14,6 +16,7 @@ const resolvers = {
     ...channelResolvers.Query,
   },
   Mutation: {
+    ...authResolvers.Mutation,
     ...userResolvers.Mutation,
     ...projectResolvers.Mutation,
     ...chatResolvers.Mutation,

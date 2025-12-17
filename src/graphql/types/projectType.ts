@@ -1,14 +1,14 @@
 // src/graphql/types/projectType.ts
 import { GraphQLObjectType, GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from "graphql";
 import { GraphQLDateTime } from "graphql-scalars";
-import { UserType } from "./userType";
-import { ChannelType } from "./channelType";
-import { VideoType } from "./videoType";
+import { UserType } from "./userType.js";
+import { ChannelType } from "./channelType.js";
+import { VideoType } from "./videoType.js";
 import { ChatType } from "./chatType.js";
-import { UserModel } from "../../models/user";
-import { ChannelModel } from "../../models/channel";
-import { VideoModel } from "../../models/video";
-import { ChatModel } from "../../models/chat";
+import { UserModel } from "../../models/user.js";
+import { ChannelModel } from "../../models/channel.js";
+import { VideoModel } from "../../models/video.js";
+import { ChatModel } from "../../models/chat.js";
 
 export const ProjectType: GraphQLObjectType = new GraphQLObjectType({
   name: "Project",

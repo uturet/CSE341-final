@@ -7,12 +7,12 @@ import {
   GraphQLList,
 } from "graphql";
 import mongoose from "mongoose";
-import { ProjectModel } from "../../models/project";
-import { ProjectType } from "../types/projectType";
+import { ProjectModel } from "../../models/project.js";
+import { ProjectType } from "../types/projectType.js";
 import {
   CreateProjectInputType,
   UpdateProjectInputType,
-} from "../inputs/projectInput";
+} from "../inputs/projectInput.js";
 
 // Helper: validate MongoDB ObjectId
 function validateObjectId(id: string) {
