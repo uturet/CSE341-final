@@ -2,12 +2,13 @@
 import { Schema, model, Types } from "mongoose";
 
 export interface IMessage {
-  sender: "user" | "ai";
+  sender: "user" | "assistant";
   text: string;
 }
 
 export interface IChat {
   projectId: Types.ObjectId;
+  videoId?: Types.ObjectId;
   title?: string;
   messages: IMessage[];
 }
@@ -15,7 +16,7 @@ export interface IChat {
 const MessageSchema = new Schema<IMessage>({
   sender: {
     type: String,
-    enum: ["user", "ai"],
+    enum: ["user", "assistant"],
     required: true,
   },
   text: {
@@ -31,6 +32,7 @@ const ChatSchema = new Schema<IChat>(
       ref: "Project",
       required: true,
     },
+    videoId: { type: Schema.Types.ObjectId, ref: "Video" },
     title: { type: String },
     messages: [MessageSchema],
   },

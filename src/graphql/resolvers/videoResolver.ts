@@ -13,6 +13,7 @@ import {
   CreateVideoInputType,
   UpdateVideoInputType,
 } from "../inputs/videoInput";
+import { createVideoFromYoutube } from "../../services/videoService";
 
 // Helper: validate MongoDB ObjectId
 function validateObjectId(id: string) {
@@ -50,23 +51,21 @@ export const videoResolvers = {
             throw new Error("Invalid project ID");
           filter.projectId = new mongoose.Types.ObjectId(projectId);
         }
-        const safeLimit = Math.min(limit ?? 50, 100);
-        const safeSkip = skip ?? 0;
-        return VideoModel.find(filter).skip(safeSkip).limit(safeLimit);
+        return VideoModel.find(filter)
+          .skip(skip ?? 0)
+          .limit(Math.min(limit ?? 50, 100));
       },
     },
   },
+
   Mutation: {
     createVideo: {
       type: VideoType,
       args: { input: { type: new GraphQLNonNull(CreateVideoInputType) } },
       resolve: async (_: any, { input }: any) => {
-        if (!validateObjectId(input.projectId))
-          throw new Error("Invalid project ID");
-        return VideoModel.create({
-          ...input,
-          projectId: new mongoose.Types.ObjectId(input.projectId),
-        });
+        const { projectId, ytVideoLink } = input;
+        if (!validateObjectId(projectId)) throw new Error("Invalid project ID");
+        return createVideoFromYoutube(projectId, ytVideoLink);
       },
     },
     updateVideo: {

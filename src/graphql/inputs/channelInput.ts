@@ -13,8 +13,8 @@ export const CreateChannelInputType = new GraphQLInputObjectType({
 export const UpdateChannelInputType = new GraphQLInputObjectType({
   name: "UpdateChannelInput",
   fields: {
+    projectId: { type: GraphQLID },
     name: { type: GraphQLString },
     ytChannelId: { type: GraphQLString },
-    projectId: { type: GraphQLID }
   }
 });

@@ -1,7 +1,6 @@
 // src/graphql/inputs/chatInput.ts
 import { GraphQLInputObjectType, GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from "graphql";
 import { MessageSenderEnum } from "../types/chatType";
-import { GraphQLInputObjectType as InputObjType } from "graphql";
 
 // --- Message Input ---
 export const MessageInputType = new GraphQLInputObjectType({
@@ -17,6 +16,7 @@ export const CreateChatInputType = new GraphQLInputObjectType({
   name: "CreateChatInput",
   fields: {
     projectId: { type: new GraphQLNonNull(GraphQLID) },
+    videoId: { type: GraphQLID },
     title: { type: GraphQLString },
     messages: { type: new GraphQLList(MessageInputType) }
   }
