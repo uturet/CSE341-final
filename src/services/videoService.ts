@@ -1,4 +1,4 @@
-// src/services/youtube/videoService.ts
+// src/services/videoService.ts
 import { youtube } from "../clients/youtube.js";
 import { VideoModel } from "../models/video.js";
 import { Types } from "mongoose";

@@ -1,4 +1,4 @@
-// src/services/youtube/channelService.ts
+// src/services/channelService.ts
 import { youtube } from "../clients/youtube.js";
 
 export async function getChannelById(channelId: string) {

@@ -13,6 +13,8 @@ import {
   CreateUserInputType,
   UpdateUserInputType,
 } from "../inputs/userInput.js";
+import { requireAuth } from "../helpers/auth.js";
+import type { GraphQLContext } from "../context.js";
 
 // Helper: validate MongoDB ObjectId
 function validateObjectId(id: string) {
@@ -24,9 +26,21 @@ export const userResolvers = {
     user: {
       type: UserType,
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
-      resolve: async (_: any, { id }: { id: string }) => {
+      resolve: async (_: any, { id }: { id: string }, context: GraphQLContext) => {
+        // Require authentication
+        const user = requireAuth(context);
+        
         if (!validateObjectId(id)) throw new Error("Invalid user ID");
-        return UserModel.findById(id);
+        
+        const requestedUser = await UserModel.findById(id);
+        if (!requestedUser) throw new Error("User not found");
+        
+        // Users can only view their own profile
+        if (requestedUser.googleId !== user.googleId) {
+          throw new Error("You can only view your own profile");
+        }
+        
+        return requestedUser;
       },
     },
     users: {
@@ -37,9 +51,21 @@ export const userResolvers = {
       },
       resolve: async (
         _: any,
-        { limit, skip }: { limit: number; skip: number }
+        { limit, skip }: { limit: number; skip: number },
+        context: GraphQLContext
       ) => {
-        return UserModel.find().skip(skip).limit(Math.min(limit, 100));
+        // Require authentication (admin only - you may want to restrict this further)
+        const user = requireAuth(context);
+        
+        // For now, users can only query themselves
+        const authenticatedUser = await UserModel.findOne({ googleId: user.googleId });
+        if (!authenticatedUser) throw new Error("User not found");
+        
+        // Return only the authenticated user
+        return [authenticatedUser];
+        
+        // If you want to allow listing all users (e.g., for admins), uncomment:
+        // return UserModel.find().skip(skip).limit(Math.min(limit, 100));
       },
     },
   },
@@ -54,6 +80,8 @@ export const userResolvers = {
         _: any,
         { input }: { input: { googleId: string; email: string; name?: string } }
       ) => {
+        // NOTE: This should only be called via OAuth flow or by system
+        // In production, you may want to restrict this further
         return UserModel.create(input);
       },
     },
@@ -65,9 +93,22 @@ export const userResolvers = {
       },
       resolve: async (
         _: any,
-        { id, input }: { id: string; input: { email?: string; name?: string } }
+        { id, input }: { id: string; input: { email?: string; name?: string } },
+        context: GraphQLContext
       ) => {
+        // Require authentication
+        const user = requireAuth(context);
+        
         if (!validateObjectId(id)) throw new Error("Invalid user ID");
+        
+        const targetUser = await UserModel.findById(id);
+        if (!targetUser) throw new Error("User not found");
+        
+        // Users can only update their own profile
+        if (targetUser.googleId !== user.googleId) {
+          throw new Error("You can only update your own profile");
+        }
+        
         return UserModel.findByIdAndUpdate(id, input, {
           new: true,
           runValidators: true,
@@ -77,8 +118,20 @@ export const userResolvers = {
     deleteUser: {
       type: GraphQLString,
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
-      resolve: async (_: any, { id }: { id: string }) => {
+      resolve: async (_: any, { id }: { id: string }, context: GraphQLContext) => {
+        // Require authentication
+        const user = requireAuth(context);
+        
         if (!validateObjectId(id)) throw new Error("Invalid user ID");
+        
+        const targetUser = await UserModel.findById(id);
+        if (!targetUser) throw new Error("User not found");
+        
+        // Users can only delete their own account
+        if (targetUser.googleId !== user.googleId) {
+          throw new Error("You can only delete your own account");
+        }
+        
         await UserModel.findByIdAndDelete(id);
         return "User deleted";
       },
