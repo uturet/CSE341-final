@@ -7,12 +7,12 @@ import {
   GraphQLList,
 } from "graphql";
 import mongoose from "mongoose";
-import { ChatModel } from "../../models/chat";
-import { ChatType } from "../types/chatType";
-import { CreateChatInputType, UpdateChatInputType } from "../inputs/chatInput";
-import { VideoModel } from "../../models/video";
-import { chatWithVideo } from "../../services/chatService";
-import type { IMessage } from "../../models/chat";
+import { ChatModel } from "../../models/chat.js";
+import { ChatType } from "../types/chatType.js";
+import { CreateChatInputType, UpdateChatInputType } from "../inputs/chatInput.js";
+import { VideoModel } from "../../models/video.js";
+import { chatWithVideo } from "../../services/chatService.js";
+import type { IMessage } from "../../models/chat.js";
 
 // Helper: validate MongoDB ObjectId
 function validateObjectId(id: string) {

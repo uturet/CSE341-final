@@ -1,8 +1,8 @@
 // src/services/youtube/videoService.ts
-import { youtube } from "../clients/youtube";
-import { VideoModel } from "../models/video";
+import { youtube } from "../clients/youtube.js";
+import { VideoModel } from "../models/video.js";
 import { Types } from "mongoose";
-import { getYoutubeTranscript } from "./transcriptService";
+import { getYoutubeTranscript } from "./transcriptService.js";
 
 export async function createVideoFromYoutube(projectId: string, ytVideoLink: string) {
   // Extract video ID from link

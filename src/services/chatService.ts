@@ -1,6 +1,6 @@
 // src/services/chatService.ts
-import { openai } from "../clients/openai";
-import type { IMessage } from "../models/chat";
+import { openai } from "../clients/openai.js";
+import type { IMessage } from "../models/chat.js";
 
 export async function chatWithVideo(transcript: string, messages: IMessage[]) {
   const formattedMessages: { role: "system" | "user" | "assistant"; content: string }[] = [

@@ -12,8 +12,8 @@ import { VideoType } from "../types/videoType.js";
 import {
   CreateVideoInputType,
   UpdateVideoInputType,
-} from "../inputs/videoInput";
-import { createVideoFromYoutube } from "../../services/videoService";
+} from "../inputs/videoInput.js";
+import { createVideoFromYoutube } from "../../services/videoService.js";
 
 // Helper: validate MongoDB ObjectId
 function validateObjectId(id: string) {

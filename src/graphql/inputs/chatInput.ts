@@ -1,6 +1,6 @@
 // src/graphql/inputs/chatInput.ts
 import { GraphQLInputObjectType, GraphQLNonNull, GraphQLID, GraphQLString, GraphQLList } from "graphql";
-import { MessageSenderEnum } from "../types/chatType";
+import { MessageSenderEnum } from "../types/chatType.js";
 
 // --- Message Input ---
 export const MessageInputType = new GraphQLInputObjectType({

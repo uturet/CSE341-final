@@ -19,6 +19,7 @@ const RootQuery = new GraphQLObjectType({
     },
     me: {
       type: AuthPayloadType,
+      // @ts-ignore
       args: resolvers.Query.me?.args || {},
       resolve: resolvers.Query.me.resolve,
     },
