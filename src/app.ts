@@ -43,7 +43,7 @@ if (swaggerDocument) {
 app.use('/auth', authRoutes);
 
 // GraphQL endpoint
-app.all('/graphql', (req, res) => {
+app.all('/graphql', (req, res, next) => {
   createHandler({ 
     schema,
     context: async () => {
@@ -63,7 +63,7 @@ app.all('/graphql', (req, res) => {
       
       return context;
     }
-  })(req, res);
+  })(req, res, next);
 });
 
 // GraphiQL interface
