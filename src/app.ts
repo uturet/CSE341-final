@@ -9,6 +9,7 @@ import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import authRoutes from './auth/authRoutes.js';
+import jwt from 'jsonwebtoken'; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -48,19 +49,26 @@ app.all('/graphql', (req, res, next) => {
     schema,
     context: async () => {
       const authHeader = req.headers.authorization;
+      console.log('🔍 Auth Header:', authHeader);
       const context: any = {};
       
       if (authHeader && authHeader.startsWith("Bearer ")) {
         try {
           const token = authHeader.substring(7);
-          const jwt = await import('jsonwebtoken');
+          console.log('🎫 Token:', token.substring(0, 20) + '...');
+          // REMOVE: const jwt = await import('jsonwebtoken');
+          // NOW use jwt directly since it's imported at the top:
           const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+          console.log('✅ Decoded user:', decoded);
           context.user = decoded;
         } catch (error) {
-          // Invalid token, context.user remains undefined
+          console.log('❌ Token error:', error);
         }
+      } else {
+        console.log('⚠️ No valid auth header');
       }
       
+      console.log('📦 Final context:', context);
       return context;
     }
   })(req, res, next);

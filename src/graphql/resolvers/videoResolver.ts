@@ -1,4 +1,4 @@
-// src/graphql/resolvers/videoResolver.ts
+// src/graphql/resolvers/videoResolver.ts (CORRECTED for your structure)
 import {
   GraphQLString,
   GraphQLNonNull,
@@ -8,16 +8,33 @@ import {
 } from "graphql";
 import mongoose from "mongoose";
 import { VideoModel } from "../../models/video.js";
+import { ProjectModel } from "../../models/project.js";
+import { UserModel } from "../../models/user.js";
 import { VideoType } from "../types/videoType.js";
 import {
   CreateVideoInputType,
   UpdateVideoInputType,
 } from "../inputs/videoInput.js";
-import { createVideoFromYoutube } from "../../services/videoService.js";
+import { createVideoFromYoutube } from "../../services/videoService.js"; // CORRECTED: no youtube folder
+import { requireAuth } from "../helpers/auth.js";
+import type { GraphQLContext } from "../context.js";
 
 // Helper: validate MongoDB ObjectId
 function validateObjectId(id: string) {
   return mongoose.isValidObjectId(id);
+}
+
+// Helper: verify user owns the project
+async function verifyProjectOwnership(projectId: string, userGoogleId: string) {
+  const project = await ProjectModel.findById(projectId);
+  if (!project) throw new Error("Project not found");
+  
+  const projectOwner = await UserModel.findById(project.userId);
+  if (!projectOwner || projectOwner.googleId !== userGoogleId) {
+    throw new Error("You do not have permission to access this project");
+  }
+  
+  return project;
 }
 
 export const videoResolvers = {
@@ -25,9 +42,19 @@ export const videoResolvers = {
     video: {
       type: VideoType,
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
-      resolve: async (_: any, { id }: { id: string }) => {
+      resolve: async (_: any, { id }: { id: string }, context: GraphQLContext) => {
+        // Require authentication
+        const user = requireAuth(context);
+        
         if (!validateObjectId(id)) throw new Error("Invalid video ID");
-        return VideoModel.findById(id);
+        
+        const video = await VideoModel.findById(id);
+        if (!video) throw new Error("Video not found");
+        
+        // Verify user owns the project this video belongs to
+        await verifyProjectOwnership(video.projectId.toString(), user.googleId);
+        
+        return video;
       },
     },
     videos: {
@@ -43,14 +70,27 @@ export const videoResolvers = {
           projectId,
           limit,
           skip,
-        }: { projectId?: string; limit?: number; skip?: number }
+        }: { projectId?: string; limit?: number; skip?: number },
+        context: GraphQLContext
       ) => {
-        const filter: any = {};
-        if (projectId) {
-          if (!validateObjectId(projectId))
-            throw new Error("Invalid project ID");
-          filter.projectId = new mongoose.Types.ObjectId(projectId);
+        // Require authentication
+        const user = requireAuth(context);
+        
+        if (!projectId) {
+          throw new Error("projectId is required");
         }
+        
+        if (!validateObjectId(projectId)) {
+          throw new Error("Invalid project ID");
+        }
+        
+        // Verify user owns the project
+        await verifyProjectOwnership(projectId, user.googleId);
+        
+        const filter: any = {
+          projectId: new mongoose.Types.ObjectId(projectId)
+        };
+        
         return VideoModel.find(filter)
           .skip(skip ?? 0)
           .limit(Math.min(limit ?? 50, 100));
@@ -62,9 +102,17 @@ export const videoResolvers = {
     createVideo: {
       type: VideoType,
       args: { input: { type: new GraphQLNonNull(CreateVideoInputType) } },
-      resolve: async (_: any, { input }: any) => {
+      resolve: async (_: any, { input }: any, context: GraphQLContext) => {
+        // Require authentication
+        const user = requireAuth(context);
+        
         const { projectId, ytVideoLink } = input;
+        
         if (!validateObjectId(projectId)) throw new Error("Invalid project ID");
+        
+        // Verify user owns the project
+        await verifyProjectOwnership(projectId, user.googleId);
+        
         return createVideoFromYoutube(projectId, ytVideoLink);
       },
     },
@@ -74,8 +122,18 @@ export const videoResolvers = {
         id: { type: new GraphQLNonNull(GraphQLID) },
         input: { type: new GraphQLNonNull(UpdateVideoInputType) },
       },
-      resolve: async (_: any, { id, input }: { id: string; input: any }) => {
+      resolve: async (_: any, { id, input }: { id: string; input: any }, context: GraphQLContext) => {
+        // Require authentication
+        const user = requireAuth(context);
+        
         if (!validateObjectId(id)) throw new Error("Invalid video ID");
+        
+        const video = await VideoModel.findById(id);
+        if (!video) throw new Error("Video not found");
+        
+        // Verify user owns the project this video belongs to
+        await verifyProjectOwnership(video.projectId.toString(), user.googleId);
+        
         return VideoModel.findByIdAndUpdate(id, input, {
           new: true,
           runValidators: true,
@@ -85,8 +143,18 @@ export const videoResolvers = {
     deleteVideo: {
       type: GraphQLString,
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },
-      resolve: async (_: any, { id }: { id: string }) => {
+      resolve: async (_: any, { id }: { id: string }, context: GraphQLContext) => {
+        // Require authentication
+        const user = requireAuth(context);
+        
         if (!validateObjectId(id)) throw new Error("Invalid video ID");
+        
+        const video = await VideoModel.findById(id);
+        if (!video) throw new Error("Video not found");
+        
+        // Verify user owns the project this video belongs to
+        await verifyProjectOwnership(video.projectId.toString(), user.googleId);
+        
         await VideoModel.findByIdAndDelete(id);
         return "Video deleted";
       },
