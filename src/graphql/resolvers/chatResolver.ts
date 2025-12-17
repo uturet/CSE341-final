@@ -7,9 +7,12 @@ import {
   GraphQLList,
 } from "graphql";
 import mongoose from "mongoose";
-import { ChatModel } from "../../models/chat.js";
-import { ChatType } from "../types/chatType.js";
-import { CreateChatInputType, UpdateChatInputType } from "../inputs/chatInput.js";
+import { ChatModel } from "../../models/chat";
+import { ChatType } from "../types/chatType";
+import { CreateChatInputType, UpdateChatInputType } from "../inputs/chatInput";
+import { VideoModel } from "../../models/video";
+import { chatWithVideo } from "../../services/chatService";
+import type { IMessage } from "../../models/chat";
 
 // Helper: validate MongoDB ObjectId
 function validateObjectId(id: string) {
@@ -33,40 +36,56 @@ export const chatResolvers = {
         limit: { type: GraphQLInt, defaultValue: 50 },
         skip: { type: GraphQLInt, defaultValue: 0 },
       },
-      resolve: async (
-        _: any,
-        {
-          projectId,
-          limit,
-          skip,
-        }: { projectId?: string; limit?: number; skip?: number }
-      ) => {
+      resolve: async (_: any, { projectId, limit, skip }: { projectId?: string; limit?: number; skip?: number }) => {
         const filter: any = {};
         if (projectId) {
-          if (!validateObjectId(projectId))
-            throw new Error("Invalid project ID");
+          if (!validateObjectId(projectId)) throw new Error("Invalid project ID");
           filter.projectId = new mongoose.Types.ObjectId(projectId);
         }
-        const safeLimit = Math.min(limit ?? 50, 100);
-        const safeSkip = skip ?? 0;
-        return ChatModel.find(filter).skip(safeSkip).limit(safeLimit);
+        return ChatModel.find(filter).skip(skip ?? 0).limit(Math.min(limit ?? 50, 100));
       },
     },
   },
+
   Mutation: {
     createChat: {
       type: ChatType,
       args: { input: { type: new GraphQLNonNull(CreateChatInputType) } },
       resolve: async (_: any, { input }: any) => {
-        if (!validateObjectId(input.projectId))
-          throw new Error("Invalid project ID");
-        return ChatModel.create({
-          ...input,
-          projectId: new mongoose.Types.ObjectId(input.projectId),
-          messages: input.messages || [],
+        const { projectId, videoId, title, messages } = input;
+
+        if (!validateObjectId(projectId)) throw new Error("Invalid project ID");
+        if (!videoId || !validateObjectId(videoId)) throw new Error("Invalid video ID");
+
+        // Fetch video document
+        const video = await VideoModel.findById(videoId);
+        if (!video) throw new Error("Video not found");
+
+        // Prepare initial messages (user input)
+        const userMessageText = messages?.[0]?.text;
+        if (!userMessageText) throw new Error("No user message provided");
+
+        // Explicitly type as IMessage[]
+        const chatMessages: IMessage[] = [
+          { sender: "user", text: userMessageText }
+        ];
+
+        // AI response based on video transcript
+        const aiAnswer = await chatWithVideo(video.transcript || "", chatMessages);
+        chatMessages.push({ sender: "assistant", text: aiAnswer || ""});
+
+        // Create chat document
+        const chatDoc = new ChatModel({
+          projectId: new mongoose.Types.ObjectId(projectId),
+          videoId: new mongoose.Types.ObjectId(videoId),
+          title: title || "New Chat",
+          messages: chatMessages,
         });
+
+        return chatDoc.save();
       },
     },
+
     updateChat: {
       type: ChatType,
       args: {
@@ -75,12 +94,26 @@ export const chatResolvers = {
       },
       resolve: async (_: any, { id, input }: { id: string; input: any }) => {
         if (!validateObjectId(id)) throw new Error("Invalid chat ID");
-        return ChatModel.findByIdAndUpdate(id, input, {
-          new: true,
-          runValidators: true,
-        });
+
+        const chat = await ChatModel.findById(id);
+        if (!chat) throw new Error("Chat not found");
+
+        const userMessageText = input.messages?.[0]?.text;
+        if (!userMessageText) throw new Error("No user message provided");
+
+        // Add user message
+        chat.messages.push({ sender: "user", text: userMessageText });
+
+        // Get AI response including all previous messages
+        const videoTranscript = chat.videoId ? (await VideoModel.findById(chat.videoId))?.transcript || "" : "";
+        const aiAnswer = await chatWithVideo(videoTranscript, [{ sender: "user", text: userMessageText }]);
+        chat.messages.push({ sender: "assistant", text: aiAnswer || "" });
+
+        await chat.save();
+        return chat;
       },
     },
+
     deleteChat: {
       type: GraphQLString,
       args: { id: { type: new GraphQLNonNull(GraphQLID) } },

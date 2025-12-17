@@ -74,7 +74,7 @@ export const projectResolvers = {
       args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
         input: { type: new GraphQLNonNull(UpdateProjectInputType) },
-      }, // import UpdateProjectInputType
+      },
       resolve: async (_: any, { id, input }: { id: string; input: any }) => {
         if (!validateObjectId(id)) throw new Error("Invalid project ID");
         return ProjectModel.findByIdAndUpdate(id, input, {

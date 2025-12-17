@@ -5,25 +5,15 @@ export const CreateVideoInputType = new GraphQLInputObjectType({
   name: "CreateVideoInput",
   fields: {
     projectId: { type: new GraphQLNonNull(GraphQLID) },
-    ytVideoId: { type: new GraphQLNonNull(GraphQLString) },
-    title: { type: GraphQLString },
-    ytChannelId: { type: GraphQLString },
-    description: { type: GraphQLString },
-    captions: { type: GraphQLString },
-    length: { type: GraphQLInt },
-    views: { type: GraphQLInt }
-  }
+    ytVideoLink: { type: new GraphQLNonNull(GraphQLString) },
+  },
 });
 
 export const UpdateVideoInputType = new GraphQLInputObjectType({
   name: "UpdateVideoInput",
   fields: {
     title: { type: GraphQLString },
-    ytChannelId: { type: GraphQLString },
-    ytVideoId: { type: GraphQLString },
     description: { type: GraphQLString },
-    captions: { type: GraphQLString },
-    length: { type: GraphQLInt },
-    views: { type: GraphQLInt }
+    transcript: { type: GraphQLString }
   }
 });

@@ -3,13 +3,13 @@ import { Schema, model, Types } from "mongoose";
 
 export interface IVideo {
   projectId: Types.ObjectId;
-  title?: string;
+  title: string;
   ytChannelId: string;
   ytVideoId: string;
   description?: string;
-  captions?: string;
-  length?: number;
-  views?: number;
+  transcript?: string;
+  duration: string;
+  views: number;
 }
 
 const VideoSchema = new Schema<IVideo>(
@@ -19,16 +19,16 @@ const VideoSchema = new Schema<IVideo>(
       ref: "Project",
       required: true,
     },
-    title: { type: String },
-    ytChannelId: { type: String },
+    title: { type: String, required: true },
+    ytChannelId: { type: String, required: true },
     ytVideoId: {
       type: String,
       required: true,
     },
     description: { type: String },
-    captions: { type: String },
-    length: { type: Number },
-    views: { type: Number },
+    transcript: { type: String },
+    duration: { type: String, required: true },
+    views: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
