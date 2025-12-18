@@ -62,6 +62,10 @@ mutation {
   },
   servers: [
     { 
+      url: 'https://cse341-final-j0y2.onrender.com', 
+      description: 'Production server' 
+    },
+    { 
       url: 'http://localhost:3000', 
       description: 'Local development server' 
     },
@@ -328,7 +332,7 @@ Main GraphQL endpoint for all queries and mutations.
       id
       title
       ytVideoId
-      length
+      duration
       views
     }
     chats {
@@ -353,17 +357,14 @@ Main GraphQL endpoint for all queries and mutations.
     id
     title
     ytVideoId
-    captions
+    transcript
     createdAt
   }
 }`,
                     variables: {
                       input: {
                         projectId: '507f1f77bcf86cd799439011',
-                        ytVideoId: 'dQw4w9WgXcQ',
-                        title: 'Sample Video',
-                        description: 'A sample YouTube video',
-                        captions: 'Full transcript here...',
+                        ytVideoLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
                       },
                     },
                   },
@@ -384,15 +385,12 @@ Main GraphQL endpoint for all queries and mutations.
                     variables: {
                       input: {
                         projectId: '507f1f77bcf86cd799439011',
+                        videoId: '507f1f77bcf86cd799439012',
                         title: 'Discussion about video',
                         messages: [
                           {
                             sender: 'user',
                             text: 'What is the main topic of this video?',
-                          },
-                          {
-                            sender: 'ai',
-                            text: 'The main topic is...',
                           },
                         ],
                       },
@@ -452,9 +450,12 @@ Main GraphQL endpoint for all queries and mutations.
                     value: {
                       errors: [
                         {
-                          message: 'Invalid user ID',
+                          message: 'Authentication required',
                           locations: [{ line: 2, column: 3 }],
                           path: ['user'],
+                          extensions: {
+                            code: 'UNAUTHENTICATED'
+                          }
                         },
                       ],
                     },
@@ -554,8 +555,8 @@ Main GraphQL endpoint for all queries and mutations.
           ytChannelId: { type: 'string', example: 'UCxxxxxx' },
           ytVideoId: { type: 'string', example: 'dQw4w9WgXcQ' },
           description: { type: 'string', example: 'Video description' },
-          captions: { type: 'string', example: 'Full video transcript...' },
-          length: { type: 'integer', example: 360 },
+          transcript: { type: 'string', example: 'Full video transcript...' },
+          duration: { type: 'string', example: 'PT5M30S' },
           views: { type: 'integer', example: 1000000 },
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' },
@@ -566,6 +567,7 @@ Main GraphQL endpoint for all queries and mutations.
         properties: {
           id: { type: 'string', example: '507f1f77bcf86cd799439011' },
           projectId: { type: 'string', example: '507f1f77bcf86cd799439011' },
+          videoId: { type: 'string', example: '507f1f77bcf86cd799439011' },
           title: { type: 'string', example: 'Chat about video' },
           messages: {
             type: 'array',
@@ -580,7 +582,7 @@ Main GraphQL endpoint for all queries and mutations.
         properties: {
           sender: { 
             type: 'string', 
-            enum: ['user', 'ai'],
+            enum: ['user', 'assistant'],
             example: 'user',
           },
           text: { type: 'string', example: 'What is this video about?' },
@@ -602,6 +604,11 @@ Main GraphQL endpoint for all queries and mutations.
 };
 
 const outputFile = './swagger-output.json';
-const routes = ['src/app.ts']; // Changed to app.ts since routes are now in GraphQL
+const routes = ['src/app.ts'];
 
-swagger(outputFile, routes, doc);
+// Write the doc directly as JSON instead of using swagger-autogen
+import { writeFileSync } from 'fs';
+
+// Since swagger-autogen doesn't work well with GraphQL, just write the doc directly
+writeFileSync(outputFile, JSON.stringify(doc, null, 2));
+console.log('✅ Swagger documentation generated successfully at', outputFile);
