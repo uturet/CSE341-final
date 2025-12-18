@@ -5,6 +5,7 @@ const chain = {
 
 export const UserModel = {
   findById: jest.fn(),
+  findOne: jest.fn(), // Added for auth checks
   find: jest.fn(() => chain),
   create: jest.fn(),
   findByIdAndUpdate: jest.fn(),
@@ -13,6 +14,7 @@ export const UserModel = {
 
 export const ProjectModel = {
   findById: jest.fn(),
+  findOne: jest.fn(), // Added for consistency
   find: jest.fn(() => chain),
   create: jest.fn(),
   findByIdAndUpdate: jest.fn(),
@@ -21,6 +23,7 @@ export const ProjectModel = {
 
 export const ChatModel = {
   findById: jest.fn(),
+  findOne: jest.fn(), // Added for consistency
   find: jest.fn(() => chain),
   create: jest.fn(),
   findByIdAndUpdate: jest.fn(),
@@ -29,6 +32,7 @@ export const ChatModel = {
 
 export const VideoModel = {
   findById: jest.fn(),
+  findOne: jest.fn(), // Added for consistency
   find: jest.fn(() => chain),
   create: jest.fn(),
   findByIdAndUpdate: jest.fn(),
@@ -37,6 +41,7 @@ export const VideoModel = {
 
 export const ChannelModel = {
   findById: jest.fn(),
+  findOne: jest.fn(), // Added for consistency
   find: jest.fn(() => chain),
   create: jest.fn(),
   findByIdAndUpdate: jest.fn(),
