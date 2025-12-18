@@ -62,6 +62,10 @@ mutation {
   },
   servers: [
     { 
+      url: 'https://cse341-final-j0y2.onrender.com', 
+      description: 'Production server' 
+    },
+    { 
       url: 'http://localhost:3000', 
       description: 'Local development server' 
     },
@@ -132,6 +136,8 @@ mutation {
 Main GraphQL endpoint for all queries and mutations.
 
 ### Available Queries:
+- **verifyToken(token: String!)**: Verify if a JWT token is valid
+- **me**: Get the currently authenticated user (requires Authorization header)
 - **user(id: ID!)**: Get a single user by ID
 - **users(limit: Int, skip: Int)**: Get list of users
 - **project(id: ID!)**: Get a single project by ID
@@ -144,6 +150,8 @@ Main GraphQL endpoint for all queries and mutations.
 - **channels(projectId: ID, limit: Int, skip: Int)**: Get list of channels
 
 ### Available Mutations:
+- **googleAuth(input: GoogleAuthInput!)**: Authenticate with Google credentials and get JWT token
+- **refreshToken(token: String!)**: Refresh an existing JWT token
 - **createUser(input: CreateUserInput!)**: Create a new user
 - **updateUser(id: ID!, input: UpdateUserInput!)**: Update a user
 - **deleteUser(id: ID!)**: Delete a user
@@ -217,6 +225,84 @@ Main GraphQL endpoint for all queries and mutations.
                     },
                   },
                 },
+                'Verify Token': {
+                  value: {
+                    query: `query VerifyToken($token: String!) {
+  verifyToken(token: $token) {
+    success
+    message
+    user {
+      id
+      email
+      name
+    }
+  }
+}`,
+                    variables: {
+                      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                    },
+                  },
+                },
+                'Get Current User': {
+                  value: {
+                    query: `query GetMe {
+  me {
+    success
+    message
+    user {
+      id
+      email
+      name
+      projects {
+        id
+        title
+      }
+    }
+  }
+}`,
+                  },
+                },
+                'Google Authentication': {
+                  value: {
+                    query: `mutation GoogleAuth($input: GoogleAuthInput!) {
+  googleAuth(input: $input) {
+    success
+    token
+    message
+    user {
+      id
+      email
+      name
+    }
+  }
+}`,
+                    variables: {
+                      input: {
+                        googleId: '1234567890',
+                        email: 'user@example.com',
+                        name: 'John Doe',
+                      },
+                    },
+                  },
+                },
+                'Refresh Token': {
+                  value: {
+                    query: `mutation RefreshToken($token: String!) {
+  refreshToken(token: $token) {
+    success
+    token
+    message
+    user {
+      id
+      email
+    }
+  }
+}`,
+                    variables: {
+                      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+                    },
+                  },
+                },
                 'Create Project': {
                   value: {
                     query: `mutation CreateProject($input: CreateProjectInput!) {
@@ -246,7 +332,7 @@ Main GraphQL endpoint for all queries and mutations.
       id
       title
       ytVideoId
-      length
+      duration
       views
     }
     chats {
@@ -271,17 +357,14 @@ Main GraphQL endpoint for all queries and mutations.
     id
     title
     ytVideoId
-    captions
+    transcript
     createdAt
   }
 }`,
                     variables: {
                       input: {
                         projectId: '507f1f77bcf86cd799439011',
-                        ytVideoId: 'dQw4w9WgXcQ',
-                        title: 'Sample Video',
-                        description: 'A sample YouTube video',
-                        captions: 'Full transcript here...',
+                        ytVideoLink: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
                       },
                     },
                   },
@@ -302,15 +385,12 @@ Main GraphQL endpoint for all queries and mutations.
                     variables: {
                       input: {
                         projectId: '507f1f77bcf86cd799439011',
+                        videoId: '507f1f77bcf86cd799439012',
                         title: 'Discussion about video',
                         messages: [
                           {
                             sender: 'user',
                             text: 'What is the main topic of this video?',
-                          },
-                          {
-                            sender: 'ai',
-                            text: 'The main topic is...',
                           },
                         ],
                       },
@@ -370,9 +450,12 @@ Main GraphQL endpoint for all queries and mutations.
                     value: {
                       errors: [
                         {
-                          message: 'Invalid user ID',
+                          message: 'Authentication required',
                           locations: [{ line: 2, column: 3 }],
                           path: ['user'],
+                          extensions: {
+                            code: 'UNAUTHENTICATED'
+                          }
                         },
                       ],
                     },
@@ -472,8 +555,8 @@ Main GraphQL endpoint for all queries and mutations.
           ytChannelId: { type: 'string', example: 'UCxxxxxx' },
           ytVideoId: { type: 'string', example: 'dQw4w9WgXcQ' },
           description: { type: 'string', example: 'Video description' },
-          captions: { type: 'string', example: 'Full video transcript...' },
-          length: { type: 'integer', example: 360 },
+          transcript: { type: 'string', example: 'Full video transcript...' },
+          duration: { type: 'string', example: 'PT5M30S' },
           views: { type: 'integer', example: 1000000 },
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' },
@@ -484,6 +567,7 @@ Main GraphQL endpoint for all queries and mutations.
         properties: {
           id: { type: 'string', example: '507f1f77bcf86cd799439011' },
           projectId: { type: 'string', example: '507f1f77bcf86cd799439011' },
+          videoId: { type: 'string', example: '507f1f77bcf86cd799439011' },
           title: { type: 'string', example: 'Chat about video' },
           messages: {
             type: 'array',
@@ -498,7 +582,7 @@ Main GraphQL endpoint for all queries and mutations.
         properties: {
           sender: { 
             type: 'string', 
-            enum: ['user', 'ai'],
+            enum: ['user', 'assistant'],
             example: 'user',
           },
           text: { type: 'string', example: 'What is this video about?' },
@@ -520,6 +604,11 @@ Main GraphQL endpoint for all queries and mutations.
 };
 
 const outputFile = './swagger-output.json';
-const routes = ['src/app.ts']; // Changed to app.ts since routes are now in GraphQL
+const routes = ['src/app.ts'];
 
-swagger(outputFile, routes, doc);
+// Write the doc directly as JSON instead of using swagger-autogen
+import { writeFileSync } from 'fs';
+
+// Since swagger-autogen doesn't work well with GraphQL, just write the doc directly
+writeFileSync(outputFile, JSON.stringify(doc, null, 2));
+console.log('✅ Swagger documentation generated successfully at', outputFile);
