@@ -1,15 +1,15 @@
 // src/app.ts
 import express from "express";
 import cors from "cors";
-import passport from './auth/passport.js'
-import { createHandler } from 'graphql-http/lib/use/express';
+import passport from "./auth/passport.js";
+import { createHandler } from "graphql-http/lib/use/express";
 import schema from "./graphql/schema.js";
-import swaggerUi from 'swagger-ui-express';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import authRoutes from './auth/authRoutes.js';
-import jwt from 'jsonwebtoken'; 
+import swaggerUi from "swagger-ui-express";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+import authRoutes from "./auth/authRoutes.js";
+import jwt from "jsonwebtoken";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,10 +19,12 @@ const app = express();
 // Load Swagger documentation
 let swaggerDocument;
 try {
-  const swaggerPath = join(__dirname, '..', 'swagger-output.json');
-  swaggerDocument = JSON.parse(readFileSync(swaggerPath, 'utf8'));
+  const swaggerPath = join(__dirname, "..", "swagger-output.json");
+  swaggerDocument = JSON.parse(readFileSync(swaggerPath, "utf8"));
 } catch (error) {
-  console.warn('Swagger documentation not found. Run "pnpm swagger" to generate it.');
+  console.warn(
+    'Swagger documentation not found. Run "pnpm swagger" to generate it.'
+  );
 }
 
 // Middleware
@@ -34,51 +36,54 @@ app.use(passport.initialize());
 
 // Swagger UI
 if (swaggerDocument) {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
-    customSiteTitle: 'Chat with YouTube Videos API',
-    customCss: '.swagger-ui .topbar { display: none }',
-  }));
+  app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument, {
+      customSiteTitle: "Chat with YouTube Videos API",
+      customCss: ".swagger-ui .topbar { display: none }",
+    })
+  );
 }
 
 // Auth routes
-app.use('/auth', authRoutes);
+app.use("/auth", authRoutes);
 
 // GraphQL endpoint
-app.all('/graphql', (req, res, next) => {
-  createHandler({ 
+app.all("/graphql", (req, res, next) => {
+  createHandler({
     schema,
     context: async () => {
       const authHeader = req.headers.authorization;
-      console.log('🔍 Auth Header:', authHeader);
+      console.log("🔍 Auth Header:", authHeader);
       const context: any = {};
-      
+
       if (authHeader && authHeader.startsWith("Bearer ")) {
         try {
           const token = authHeader.substring(7);
-          console.log('🎫 Token:', token.substring(0, 20) + '...');
+          console.log("🎫 Token:", token.substring(0, 20) + "...");
           // REMOVE: const jwt = await import('jsonwebtoken');
           // NOW use jwt directly since it's imported at the top:
           const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
-          console.log('✅ Decoded user:', decoded);
+          console.log("✅ Decoded user:", decoded);
           context.user = decoded;
         } catch (error) {
-          console.log('❌ Token error:', error);
+          console.log("❌ Token error:", error);
         }
       } else {
-        console.log('⚠️ No valid auth header');
+        console.log("⚠️ No valid auth header");
       }
-      
-      console.log('📦 Final context:', context);
+
+      console.log("📦 Final context:", context);
       return context;
-    }
+    },
   })(req, res, next);
 });
 
 // GraphiQL interface
-if (process.env.NODE_ENV !== "production")
-  app.get('/graphiql', (_req, res) => {
-    res.type('html');
-    res.end(`<!DOCTYPE html>
+app.get("/graphiql", (_req, res) => {
+  res.type("html");
+  res.end(`<!DOCTYPE html>
   <html>
     <head>
       <title>GraphiQL</title>
@@ -121,6 +126,6 @@ if (process.env.NODE_ENV !== "production")
       </script>
     </body>
   </html>`);
-  });
+});
 
 export default app;
