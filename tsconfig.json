@@ -4,8 +4,10 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "rootDir": "./src",
     "outDir": "./dist",
     "strict": true
   },
-  "include": ["src", "tests"]    // Added "tests"
+  "include": ["src"],
+  "exclude": ["tests"]
 }

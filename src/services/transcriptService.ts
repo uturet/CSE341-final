@@ -2,9 +2,7 @@
 import { YoutubeTranscript } from "youtube-transcript";
 import { fetchTranscript as fetchUnofficial } from "youtube-transcript-plus";
 
-/**
- * Fetch official YouTube transcript.
- */
+
 async function fetchOfficialTranscript(videoId: string): Promise<string> {
   try {
     const transcript = await YoutubeTranscript.fetchTranscript(videoId);
@@ -14,9 +12,7 @@ async function fetchOfficialTranscript(videoId: string): Promise<string> {
   }
 }
 
-/**
- * Fetch transcript using auto-generated captions.
- */
+
 async function fetchAutoTranscript(videoId: string): Promise<string> {
   try {
     const segments: any = await fetchUnofficial(videoId);
@@ -26,9 +22,7 @@ async function fetchAutoTranscript(videoId: string): Promise<string> {
   }
 }
 
-/**
- * Main function: try official first, then auto-generated fallback.
- */
+
 export async function getYoutubeTranscript(videoId: string): Promise<string> {
   let transcript = await fetchOfficialTranscript(videoId);
 
