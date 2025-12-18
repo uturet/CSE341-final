@@ -1,6 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
-
+// src/auth/jwt.ts
 import jwt from "jsonwebtoken";
 import type { IUser as User } from "../models/user.js";
 

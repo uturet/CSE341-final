@@ -1,4 +1,4 @@
-// src/graphql/resolvers/videoResolver.ts (CORRECTED for your structure)
+// src/graphql/resolvers/videoResolver.ts 
 import {
   GraphQLString,
   GraphQLNonNull,
